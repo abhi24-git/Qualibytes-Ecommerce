@@ -10,10 +10,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - 13.201.229.188.sslip.io
+    - 43.204.29.50.sslip.io
     secretName: easyshop-tls-secret
   rules:
-  - host: easyshop.letsdeployit.com
+  - host: 43.204.29.50.sslip.io
     http:
       paths:
       - path: /
