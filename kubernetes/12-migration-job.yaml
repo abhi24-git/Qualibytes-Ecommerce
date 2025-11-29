@@ -9,9 +9,9 @@ spec:
       containers:
       - name: qbs-migration
 <<<<<<< HEAD
-        image: satyamsri/qbshop-migration:latest
+        image: satyamsri/qbshop-migration:9
 =======
-        image: satyamsri/qbshop-migration:7
+        image: satyamsri/qbshop-migration:9
 >>>>>>> 19c8451925e51327c62a233a40d6c98bccd1a7fc
         imagePullPolicy: Always
         env:
