@@ -52,15 +52,12 @@ const SearchBarForm = ({
       return;
     } else {
       router.push(`/shops/${selectedShop}?q=${searchValue}`);
-      if (!setIsSearchOpen) return;
-      setIsSearchOpen(false);
+      if (setIsSearchOpen) setIsSearchOpen(false);
     }
   };
 
   const handleSelectShop = useCallback((shop?: string) => {
-    if (shop) {
-      setSelectedShop(shop);
-    }
+    if (shop) setSelectedShop(shop);
   }, []);
 
   useEffect(() => {
@@ -74,14 +71,15 @@ const SearchBarForm = ({
   return (
     <form
       className={cn(
-        "searchBar flex items-center border-input border rounded-lg focus-within:border-primary overflow-hidden bg-secondary",
+        "searchBar flex items-center border-input border rounded-lg focus-within:border-blue-600 overflow-hidden bg-secondary shadow-sm transition-all",
         className
       )}
       onSubmit={handleSubmit}
     >
+      {/* Shop Selector Dropdown */}
       {useSelect && (
         <Select onValueChange={handleSelectShop} value={selectedShop}>
-          <SelectTrigger className="min-w-[70px] max-w-fit border-none rounded-none bg-accent">
+          <SelectTrigger className="min-w-[110px] max-w-fit border-none rounded-none bg-accent text-sm">
             <SelectValue placeholder="Select Shop" className="capitalize" />
           </SelectTrigger>
           <SelectContent>
@@ -93,14 +91,14 @@ const SearchBarForm = ({
                   key={index}
                   className="px-4 [&>.indicator]:hidden capitalize"
                 >
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-2">
                     <Image
                       src={shop.icon}
-                      width={40}
-                      height={40}
+                      width={30}
+                      height={30}
                       alt={shop.title}
+                      className="rounded"
                     />
-
                     <span>{shop.title}</span>
                   </div>
                 </SelectItem>
@@ -110,15 +108,21 @@ const SearchBarForm = ({
         </Select>
       )}
 
+      {/* Search Input */}
       <Input
         placeholder="Search products"
-        className="border-none rounded-none"
+        className="border-none rounded-none text-sm flex-1 bg-secondary focus:ring-0"
         type="text"
         onChange={(e) => setSearchValue(e.target.value)}
         defaultValue={searchParams.get("q")?.toString()}
       />
 
-      <Button className="text-xl" type="submit">
+      {/* SEARCH BUTTON — UPDATED BLUE UI */}
+      <Button
+        className="text-xl bg-blue-600 hover:bg-blue-700 text-white rounded-none h-full px-6 flex items-center justify-center
+        transition-all duration-200 active:scale-95 shadow-md"
+        type="submit"
+      >
         <IoSearch />
       </Button>
     </form>
