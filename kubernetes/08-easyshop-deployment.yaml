@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: easyshop
-  namespace: easyshop
+  name: qbshop
+  namespace: qbshop
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: easyshop
+      app: qbshop
   template:
     metadata:
       labels:
-        app: easyshop
+        app: qbshop
     spec:
       containers:
         - name: qbs-app
@@ -21,24 +21,24 @@ spec:
             - containerPort: 3000
           envFrom:
             - configMapRef:
-                name: easyshop-config
+                name: qbshop-config
             - secretRef:
-                name: easyshop-secrets
+                name: qbshop-secrets
           env:
             - name: NEXTAUTH_URL
               valueFrom:
                 configMapKeyRef:
-                  name: easyshop-config
+                  name: qbshop-config
                   key: NEXTAUTH_URL
             - name: NEXTAUTH_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: easyshop-secrets
+                  name: qbshop-secrets
                   key: NEXTAUTH_SECRET
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: easyshop-secrets
+                  name: qbshop-secrets
                   key: JWT_SECRET
           resources:
             requests:

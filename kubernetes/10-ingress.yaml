@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: easyshop-ingress
-  namespace: easyshop
+  name: qbshop-ingress
+  namespace: qbshop
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "50m"
     kubernetes.io/ingress.class: "nginx"
@@ -10,17 +10,17 @@ metadata:
 spec:
   tls:
   - hosts:
-    - easyshop.letsdeployit.com
-    secretName: easyshop-tls-secret  # Cert-Manager will manage this
+    - asriv.shop
+    secretName: qbshop-tls-secret  # Cert-Manager will manage this
   rules:
-  - host: easyshop.letsdeployit.com
+  - host: asriv.shop
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: easyshop-service
+            name: qbshop-service
             port:
               number: 80
 
