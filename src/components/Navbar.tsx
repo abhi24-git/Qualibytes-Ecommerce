@@ -9,62 +9,35 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { IoChevronDownOutline } from "react-icons/io5";
-import { FaGithub } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import MobileMenu from "./MobileMenu";
 import Modal from "./Modal";
 import { ProfileMenu } from "./ProfileMenu";
 import SearchBar from "./SearchBar";
 import { ToggleTheme } from "./ToggleTheme";
-import { LoginForm } from "./forms/LoginForm";
-import SignupForm from "./forms/SignupForm";
 import { Button } from "./ui/button";
 
 const links = [
-  {
-    title: "Shops",
-    url: "/shops",
-  },
-  {
-    title: "Contact",
-    url: "/contact",
-  },
-
-  {
-    title: "Offers",
-    url: "/offers",
-  },
+  { title: "Shops", url: "/shops" },
+  { title: "Contact", url: "/contact" },
+  { title: "Offers", url: "/offers" },
   {
     title: "Pages",
     url: "",
     subLinks: [
-      {
-        title: "Profile",
-        url: "/profile",
-      },
-      {
-        title: "Contact Us",
-        url: "/contact",
-      },
-      {
-        title: "Checkout",
-        url: "/checkout",
-      },
-      {
-        title: "Orders",
-        url: "/profile/orders",
-      },
+      { title: "Profile", url: "/profile" },
+      { title: "Contact Us", url: "/contact" },
+      { title: "Checkout", url: "/checkout" },
+      { title: "Orders", url: "/profile/orders" },
     ],
   },
 ];
 
 const Navbar = () => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  // from redux
   const { isAuthenticated } = useAppSelector((state) => state.authSlice);
   const dispatch = useDispatch();
 
@@ -79,8 +52,7 @@ const Navbar = () => {
     };
 
     authentication();
-    return () => {};
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch]);
 
   const handleLogout = async () => {
     try {
@@ -97,6 +69,7 @@ const Navbar = () => {
     <>
       <div className="navbar px-default py-3 bg-secondary shadow-lg border-b sticky top-0 left-0 z-50">
         <nav className="flex gap-6 items-center justify-between">
+          {/* LOGO + SEARCH */}
           <div className="left flex gap-6 items-center flex-1">
             <Logo />
 
@@ -113,24 +86,21 @@ const Navbar = () => {
                     <li className="group relative" key={link.url}>
                       <Link
                         href={link.url}
-                        className="flex gap-1 items-center group-hover:text-primary transition-colors duration-300"
+                        className="flex gap-1 items-center group-hover:text-blue-600 transition-colors duration-300"
                       >
-                        <span>{link.title}</span>
-                        {link.subLinks && (
-                          <span>
-                            <IoChevronDownOutline />
-                          </span>
-                        )}
+                        {link.title}
+                        {link.subLinks && <IoChevronDownOutline />}
                       </Link>
+
                       {link.subLinks && (
                         <ul className="invisible scale-95 translate-y-2 opacity-0 absolute top-[130%] right-0 w-[160px] border bg-card rounded-lg transition-all duration-150 shadow-lg p-0.5 group-hover:visible group-hover:scale-100 group-hover:translate-y-0 group-hover:opacity-100">
-                          {link.subLinks.map((link) => (
-                            <li key={link.url}>
+                          {link.subLinks.map((sub) => (
+                            <li key={sub.url}>
                               <Link
                                 className="block px-3 py-2 hover:bg-accent rounded-lg"
-                                href={link.url}
+                                href={sub.url}
                               >
-                                {link.title}
+                                {sub.title}
                               </Link>
                             </li>
                           ))}
@@ -141,52 +111,41 @@ const Navbar = () => {
                 </ul>
               </div>
             </div>
-            {/* mobile menu */}
+
+            {/* Mobile menu button */}
             <button
               type="button"
               className="menu text-3xl hidden md:block lg:hidden"
-              title="menu"
               onClick={() => setIsMobileOpen(!isMobileOpen)}
             >
               <HiMenuAlt2 />
             </button>
 
-            {isAuthenticated && (
-              <div className="profile">
-                <ProfileMenu setIsOpen={setIsConfirm} />
-              </div>
-            )}
+            {/* PROFILE MENU */}
+            {isAuthenticated && <ProfileMenu setIsOpen={setIsConfirm} />}
+
             <div className="hidden lg:block">
               <ToggleTheme />
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="hidden md:flex items-center gap-2 hover:bg-primary hover:text-white"
-              asChild
-            >
-              <a
-                href="https://qualibytes.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2"
-              >
-                <FaGithub className="text-lg" />
-                <span>Source Code</span>
-              </a>
-            </Button>
+
+            {/* JOIN BUTTON — BLUE THEME */}
             {!isAuthenticated && (
               <Link href="/login">
-                <Button>Join</Button>
+                <Button
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200 active:scale-95"
+                >
+                  Join
+                </Button>
               </Link>
             )}
           </div>
         </nav>
       </div>
 
+      {/* MOBILE MENU */}
       <MobileMenu isOpen={isMobileOpen} setIsOpen={setIsMobileOpen} />
 
-      {/* logout confirmation */}
+      {/* LOGOUT CONFIRMATION MODAL */}
       <Modal
         isOpen={isConfirm}
         setIsOpen={setIsConfirm}
@@ -195,17 +154,14 @@ const Navbar = () => {
         <div className="p-5 rounded-lg flex flex-col justify-center items-center text-center gap-3">
           <h2 className="text-lg">Are you sure to logout?</h2>
           <div className="flex justify-between items-center gap-4">
-            <Button type="button" onClick={() => setIsConfirm(false)}>
-              <span>No</span>
-            </Button>
+            <Button onClick={() => setIsConfirm(false)}>No</Button>
 
             <Button
-              type="button"
               variant="outline"
-              className="border-primary hover:bg-primary hover:text-white"
+              className="border-blue-600 hover:bg-blue-600 hover:text-white"
               onClick={handleLogout}
             >
-              <span>Ok</span>
+              Ok
             </Button>
           </div>
         </div>

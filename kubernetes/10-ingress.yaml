@@ -1,19 +1,50 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: easyshop-ingress
-  namespace: easyshop
+  name: qbshop-ingress
+  namespace: qbshop
   annotations:
-    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
 spec:
+  ingressClassName: nginx
+
+  tls:
+    - hosts:
+        - asriv.shop
+        - qbshop.asriv.shop
+        - www.qbshop.asriv.shop
+      secretName: qbshop-tls-secret
+
   rules:
-  - host: ac59d04500de84ba9812ad75968bcdc5-674990491.ap-south-1.elb.amazonaws.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: easyshop-service
-            port:
-              number: 80
+    - host: asriv.shop
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: qbshop-service
+                port:
+                  number: 80
+
+    - host: qbshop.asriv.shop
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: qbshop-service
+                port:
+                  number: 80
+
+    - host: www.qbshop.asriv.shop
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: qbshop-service
+                port:
+                  number: 80

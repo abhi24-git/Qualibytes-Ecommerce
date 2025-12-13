@@ -2,13 +2,13 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: db-migration
-  namespace: easyshop
+  namespace: qbshop
 spec:
   template:
     spec:
       containers:
-      - name: migration
-        image: satyamsri/easyshop-migration:latest
+      - name: qbs-migration
+        image: satyamsri/qbshop-migration:4
         imagePullPolicy: Always
         env:
         - name: MONGODB_URI

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongodb
-  namespace: easyshop
+  namespace: qbshop
 spec:
   serviceName: mongodb-service
   replicas: 1
@@ -15,7 +15,7 @@ spec:
         app: mongodb
     spec:
       containers:
-        - name: mongodb
+        - name: qbs-mongodb
           image: mongo:latest
           ports:
             - containerPort: 27017
@@ -29,7 +29,14 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-      volumes:
-        - name: mongodb-storage
-          persistentVolumeClaim:
-            claimName: mongodb-pvc
+
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: gp2   # AWS EBS storage class
+        resources:
+          requests:
+            storage: 5Gi

@@ -4,15 +4,16 @@ pipeline {
     agent any
     
     environment {
-        // Update the main app image name to match the deployment file
-        DOCKER_IMAGE_NAME = 'satyamsri/easyshop-app'
-        DOCKER_MIGRATION_IMAGE_NAME = 'satyamsri/easyshop-migration'
+        // Updated image names for QBShop project (DEV)
+        DOCKER_IMAGE_NAME = 'satyamsri/qbshop-app'
+        DOCKER_MIGRATION_IMAGE_NAME = 'satyamsri/qbshop-migration'
         DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
         GITHUB_CREDENTIALS = credentials('github-credentials')
-        GIT_BRANCH = "main"
+        GIT_BRANCH = "dev"
     }
     
     stages {
+
         stage('Cleanup Workspace') {
             steps {
                 script {
@@ -20,17 +21,41 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Clone Repository') {
             steps {
                 script {
-                    clone("https://github.com/Satyams-git/Qualibytes-Ecommerce.git","main")
+                    clone("https://github.com/Satyams-git/Qualibytes-Ecommerce.git", "dev")
+                }
+            }
+        }
+
+        //  NEW STAGE: Cleanup old Docker images to avoid disk full issues
+        stage('Cleanup Old Docker Images') {
+            steps {
+                script {
+                    echo "Cleaning up old Docker images, containers & volumes..."
+
+                    // Remove dangling images
+                    sh "docker image prune -f"
+
+                    // Remove unused images older than 12 hours
+                    sh "docker image prune -a --force --filter \"until=12h\""
+
+                    // Remove stopped containers
+                    sh "docker container prune -f"
+
+                    // Remove unused volumes (safe)
+                    sh "docker volume prune -f"
+
+                    echo "Cleanup completed successfully!"
                 }
             }
         }
         
         stage('Build Docker Images') {
             parallel {
+                
                 stage('Build Main App Image') {
                     steps {
                         script {
@@ -70,16 +95,14 @@ pipeline {
         stage('Security Scan with Trivy') {
             steps {
                 script {
-                    // Create directory for results
-                  
                     trivy_scan()
-                    
                 }
             }
         }
         
         stage('Push Docker Images') {
             parallel {
+                
                 stage('Push Main App Image') {
                     steps {
                         script {
@@ -106,7 +129,6 @@ pipeline {
             }
         }
         
-        // Add this new stage
         stage('Update Kubernetes Manifests') {
             steps {
                 script {
@@ -115,7 +137,7 @@ pipeline {
                         manifestsPath: 'kubernetes',
                         gitCredentials: 'github-credentials',
                         gitUserName: 'Jenkins CI',
-                        gitUserEmail: 'satyam.du.in@gmail.com'
+                        gitUserEmail: 'jenkins@ci.local'
                     )
                 }
             }

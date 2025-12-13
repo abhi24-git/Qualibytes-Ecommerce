@@ -38,9 +38,9 @@ const ShippingAddressForm = ({ onFormDataChange }: ShippingAddressFormProps) => 
       phone: "+91 9400990439",
       streetAddress: "House 1, Street 1",
       city: "Muzaffarpur",
-      state: "Bihar",
+      state: "Noida",
       country: "India",
-      zip: "840000",
+      zip: "201301",
     },
   });
 

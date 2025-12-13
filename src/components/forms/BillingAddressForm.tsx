@@ -38,8 +38,8 @@ const BillingAddressForm = ({ onFormDataChange }: BillingAddressFormProps) => {
       phone: "+91 9499004395",
       country: "India",
       city: "Muzaffarpur",
-      state: "Bihar",
-      zip: "840000",
+      state: "Noida",
+      zip: "201301",
       streetAddress: "12/43 Kidd Avenue",
     },
   });
